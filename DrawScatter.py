@@ -1,11 +1,13 @@
 import csv
 import matplotlib.pyplot as plt
-# import plotly.plotly as py
-import numpy as np
+
+from SinglePerceptron import SinglePerceptron
+
 
 class drawScatter:
-    def __init__(self):
+    def __init__(self, learn):
         self.loc = []
+        self.learnFactor = learn
 
     def readFile(self, path):
         with open(path) as csv_file:
@@ -13,10 +15,8 @@ class drawScatter:
             line_count = 0
             for row in csv_reader:
                 if line_count == 0:
-                    # print(f'Column names are {", ".join(row)}')
                     line_count += 1
                 else:
-                    # print(f'\t{row[0]} works in the {row[1]} department, and was born in {row[2]}.')
                     self.loc.append([float(row[0]), float(row[1]), int(row[2])])
                     line_count += 1
             # print(f'Processed {line_count} lines.')
@@ -32,11 +32,34 @@ class drawScatter:
                 plt.scatter(self.loc[i][0], self.loc[i][1], color=colors[1])
             else:
                 plt.scatter(self.loc[i][0], self.loc[i][1], color=colors[0])
-        # plt.show()
+
+        # save scatter
         plt.savefig('Scatter.png')
+        # plot scatter
+        plt.show()
+
+    def trainAndTestData(self):
+        train = []
+        test = []
+        resultOfTest = []
+
+        numberOfTrainData = len(self.loc) * self.learnFactor
+        for i in range(numberOfTrainData):
+            train.append(self.loc[i])
+        for i in range(len(self.loc) - numberOfTrainData):
+            resultOfTest.append(self.loc[i][2])
+            self.loc[i][2] = 0
+            test.append(self.loc[i])
+
+        # now call the Single perceptron and pass data
+        perceptron = SinglePerceptron(train, test, resultOfTest)
+        perceptron.draw('train')
 
 
-if __name__ == "__main__":
-    scatter = drawScatter()
+
+
+if __name__ == "__main__" :
+    scatter = drawScatter(0.8)  # pass the learning factor to the class
     scatter.readFile('dataset.csv')
     scatter.drawChart()
+    scatter.trainAndTestData()
