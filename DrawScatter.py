@@ -46,13 +46,13 @@ class drawScatter:
                 resultOfTest.append(self.loc[i][2])
                 # self.loc[i][2] = 0
                 test.append(self.loc[i])
+
         print("number  of test data is ", len(test))
         self.drawChart(train, "train")
         # self.drawChart(test, "test")
         # f = open("testFile.txt", "a")
         # f.write(str(test[0]))
         # f.close()
-
 
         # now call the Single perceptron and pass data
         perceptron = SinglePerceptron(train, test, resultOfTest)
