@@ -1,6 +1,4 @@
-from numpy.random import random_sample
 from math import exp, log,log10
-import random
 import matplotlib.pyplot as plt
 
 class SinglePerceptron :

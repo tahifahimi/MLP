@@ -1,12 +1,16 @@
 import csv
 import matplotlib.pyplot as plt
 from SinglePerceptron import SinglePerceptron
-
+from MLP import MLP
 
 class drawScatter:
     def __init__(self, learn):
         self.loc = []
         self.learnFactor = learn
+
+        self.test = []
+        self.train = []
+        self.resultOfTest = []
 
     def readFile(self, path):
         with open(path) as csv_file:
@@ -33,34 +37,36 @@ class drawScatter:
         # plot scatter
         # plt.show()
 
-    def trainAndTestData(self):
-        train = []
-        test = []
-        resultOfTest = []
+    def seperateTrainData(self):
         numberOfTrainData = int(len(self.loc) * self.learnFactor)
         print(numberOfTrainData)
         for i in range(len(self.loc)):
             if i < numberOfTrainData:
-                train.append(self.loc[i])
+                self.train.append(self.loc[i])
             else:
-                resultOfTest.append(self.loc[i][2])
+                self.resultOfTest.append(self.loc[i][2])
                 # self.loc[i][2] = 0
-                test.append(self.loc[i])
+                self.test.append(self.loc[i])
 
-        print("number  of test data is ", len(test))
-        self.drawChart(train, "train")
+        print("number  of test data is ", len(self.test))
+        self.drawChart(self.train, "train")
         # self.drawChart(test, "test")
         # f = open("testFile.txt", "a")
         # f.write(str(test[0]))
         # f.close()
-
-        # now call the Single perceptron and pass data
-        perceptron = SinglePerceptron(train, test, resultOfTest)
-        perceptron.learn()
 
 
 if __name__ == "__main__":
     s = drawScatter(0.9)  # pass the learning factor to the class
     s.readFile('dataset.csv')
     s.drawChart(s.loc,"main")
-    s.trainAndTestData()
+
+    s.seperateTrainData()
+
+    # now call the Single perceptron and pass data
+    # perceptron = SinglePerceptron(s.train, s.test, s.resultOfTest)
+    # perceptron.learn()
+
+    # create MLP
+    mlp = MLP(s.train, s.test, s.resultOfTest)
+    mlp.learn()
