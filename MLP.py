@@ -10,16 +10,16 @@ class MLP:
         self.w = [0.1, 0.1]
         self.v = [0.1, 0.1]
         self.u = [0.1, 0.1]
-        self.b0 = 1
-        self.b1 = 1
-        self.b2 = 1
+        self.b0 = 2
+        self.b1 = 2
+        self.b2 = 2
 
         self.train = train
         self.test = test
         self.resultOfTest = resultOfTest
 
-        self.lr = 0.05
-        self.n_epoch = 300
+        self.lr = 0.1
+        self.n_epoch = 600
 
     def calculateY(self, z0, z1):
         """ find y for each coordinate
@@ -41,6 +41,42 @@ class MLP:
             cost = (y - yt)^2 """
         return (y-yt)*(y-yt)
 
+    def calculateGradientW(self, checker, x0, x1, yt, y, z0, z1):
+        """ dcost/dw = dcost/dy * dy/dz * dz/dw
+            dcost/dwi = 2*(y-yt)* u0*S(z0 """
+        A = z0 * self.u[0] + z1 * self.u[1] + self.b2
+        B = x0 * self.w[0] + x1 * self.w[1] + self.b0
+        if checker == "w0":
+            return 2 * (y - yt) * self.u[0] * (exp(-1 * A) / (1 + exp(-1 * A) * (1 + exp(-1 * A)))) * x0 * (
+                        exp(-1 * B) / (1 + exp(-1 * B) * (1 + exp(-1 * B))))
+        if checker == "w1":
+            return 2 * (y - yt) * self.u[0] * (exp(-1 * A) / (1 + exp(-1 * A) * (1 + exp(-1 * A)))) * x1 * (
+                        exp(-1 * B) / (1 + exp(-1 * B) * (1 + exp(-1 * B))))
+        if checker == "b0":
+            return 2 * (y - yt) * self.u[0] * (exp(-1 * A) / (1 + exp(-1 * A) * (1 + exp(-1 * A)))) * (
+                        exp(-1 * B) / (1 + exp(-1 * B) * (1 + exp(-1 * B))))
+
+    def calculateGradientV(self, checker, x0, x1, yt, y, z0, z1):
+        A = x0 * self.v[0] + x1 * self.v[1] + self.b1
+        B = z0 * self.u[0] + z1 * self.u[1] + self.b2
+        if checker == "v0":
+            return 2 * (y - yt) * self.u[1] * (exp(-1 * B) / (1 + exp(-1 * B) * (1 + exp(-1 * B)))) * x0 * (
+                    exp(-1 * A) / (1 + exp(-1 * A) * (1 + exp(-1 * A))))
+        if checker == "v1":
+            return 2 * (y - yt) * self.u[1] * (exp(-1 * B) / (1 + exp(-1 * B) * (1 + exp(-1 * B)))) * x1 * (
+                    exp(-1 * A) / (1 + exp(-1 * A) * (1 + exp(-1 * A))))
+        if checker == "b1":
+            return 2 * (y - yt) * self.u[1] * (exp(-1 * B) / (1 + exp(-1 * B) * (1 + exp(-1 * B)))) * (
+                    exp(-1 * A) / (1 + exp(-1 * A) * (1 + exp(-1 * A))))
+
+    def calculateGradientU(self, checker, yt, y, z0, z1):
+        l = z0 * self.u[0] + z1 * self.u[1] + self.b2
+        if checker == "u0":
+            return 2 * (y - yt) * z0 * (exp(-1 * l) / (1 + exp(-1 * l) * (1 + exp(-1 * l))))
+        if checker == "u1":
+            return 2 * (y - yt) * z1 * (exp(-1 * l) / (1 + exp(-1 * l) * (1 + exp(-1 * l))))
+        if checker == "b2":
+            return 2 * (y - yt) * (exp(-1 * l) / (1 + exp(-1 * l) * (1 + exp(-1 * l))))
 
     def learn(self):
         """ compute the values of the W and bias for each epoch """
@@ -62,20 +98,20 @@ class MLP:
                 # compute cost for the ith data
                 cost += self.calculateCost(self.train[i][2], y)
                 # compute the gradients of all weights
-                gradW[0] += self.calculateGradW("w0", self.train[i][0], self.train[i][1], self.train[i][2], y, z0, z1)
-                gradW[1] += self.calculateGradW("w1", self.train[i][0], self.train[i][1], self.train[i][2], y, z0, z1)
-                gradB0 += self.calculateGradW("b0", self.train[i][0], self.train[i][1], self.train[i][2], y, z0, z1)
+                gradW[0] += self.calculateGradientW("w0", self.train[i][0], self.train[i][1], self.train[i][2], y, z0, z1)
+                gradW[1] += self.calculateGradientW("w1", self.train[i][0], self.train[i][1], self.train[i][2], y, z0, z1)
+                gradB0 += self.calculateGradientW("b0", self.train[i][0], self.train[i][1], self.train[i][2], y, z0, z1)
 
-                gradV[0] += self.calculateGradW("v0", self.train[i][0], self.train[i][1], self.train[i][2], y, z0, z1)
-                gradV[1] += self.calculateGradW("v1", self.train[i][0], self.train[i][1], self.train[i][2], y, z0, z1)
-                gradB1 += self.calculateGradW("b1", self.train[i][0], self.train[i][1], self.train[i][2], y, z0, z1)
+                gradV[0] += self.calculateGradientV("v0", self.train[i][0], self.train[i][1], self.train[i][2], y, z0, z1)
+                gradV[1] += self.calculateGradientV("v1", self.train[i][0], self.train[i][1], self.train[i][2], y, z0, z1)
+                gradB1 += self.calculateGradientV("b1", self.train[i][0], self.train[i][1], self.train[i][2], y, z0, z1)
 
-                gradU[0] += self.calculateGradW("u0", self.train[i][0], self.train[i][1], self.train[i][2], y, z0, z1)
-                gradU[1] += self.calculateGradW("u1", self.train[i][0], self.train[i][1], self.train[i][2], y, z0, z1)
-                gradB2 += self.calculateGradW("b2", self.train[i][0], self.train[i][1], self.train[i][2], y, z0, z1)
+                gradU[0] += self.calculateGradientU("u0", self.train[i][2], y, z0, z1)
+                gradU[1] += self.calculateGradientU("u1", self.train[i][2], y, z0, z1)
+                gradB2 += self.calculateGradientU("b2", self.train[i][2], y, z0, z1)
 
             # draw each generation
-            if time == 299 or time == 0:
+            if time == self.n_epoch-1 or time == 0 or time == self.n_epoch/2:
                 self.draw("train", time, resultOfModel)
 
             print("gen ", time)
@@ -83,14 +119,14 @@ class MLP:
             # assign the grads to the weights
             self.w[0] = self.w[0] - (self.lr * gradW[0]) / len(self.train)
             self.w[1] = self.w[1] - (self.lr * gradW[1]) / len(self.train)
-            self.b0 = self.bias - (self.lr * gradB0) / len(self.train)
+            self.b0 = self.b0 - (self.lr * gradB0) / len(self.train)
 
-            self.V[0] = self.v[0] - (self.lr * gradV[0]) / len(self.train)
-            self.V[1] = self.v[1] - (self.lr * gradV[1]) / len(self.train)
+            self.v[0] = self.v[0] - (self.lr * gradV[0]) / len(self.train)
+            self.v[1] = self.v[1] - (self.lr * gradV[1]) / len(self.train)
             self.b1 = self.b1 - (self.lr * gradB1) / len(self.train)
 
-            self.U[0] = self.U[0] - (self.lr * gradU[0]) / len(self.train)
-            self.U[1] = self.U[1] - (self.lr * gradU[1]) / len(self.train)
+            self.u[0] = self.u[0] - (self.lr * gradU[0]) / len(self.train)
+            self.u[1] = self.u[1] - (self.lr * gradU[1]) / len(self.train)
             self.b2 = self.b2 - (self.lr * gradB2) / len(self.train)
 
     def draw(self, typeOfDraw, generation, resultOfModel):
@@ -111,38 +147,5 @@ class MLP:
                     plt.scatter(self.test[i][0], self.test[i][1], color=colors[0])
 
         # plt.show()
-        plt.savefig(str(generation) + 'SingleTrain.png')
-
-    def calculateGradientW(self, checker, x0, x1, yt, y, z0, z1):
-        a = x0 * self.w[0] + x1 * self.w[1] + self.b0
-        l = z0 * self.u[0] + z1 * self.u[1] + self.b2
-        if checker == "w0":
-            return 2*(y-yt) * self.u[0] *(exp(-1 * l) / (1 + exp(-1 * l) * (1 + exp(-1 * l)))) * x0*(exp(-1 * a) / (1 + exp(-1 * a) * (1 + exp(-1 * a))))
-        if checker == "w1":
-            return 2*(y-yt) * self.u[0] *(exp(-1 * l) / (1 + exp(-1 * l) * (1 + exp(-1 * l)))) * x1*(exp(-1 * a) / (1 + exp(-1 * a) * (1 + exp(-1 * a))))
-        if checker == "b0":
-            return 2*(y-yt) * self.u[0] *(exp(-1 * l) / (1 + exp(-1 * l) * (1 + exp(-1 * l)))) * (exp(-1 * a) / (1 + exp(-1 * a) * (1 + exp(-1 * a))))
-
-    def calculateGradientV(self, checker, x0, x1, yt, y, z0, z1):
-        a = x0 * self.v[0] + x1 * self.v[1] + self.b1
-        l = z0 * self.u[0] + z1 * self.u[1] + self.b2
-        if checker == "v0":
-            return 2 * (y - yt) * self.u[1] * (exp(-1 * l) / (1 + exp(-1 * l) * (1 + exp(-1 * l)))) * x0 * (
-                        exp(-1 * a) / (1 + exp(-1 * a) * (1 + exp(-1 * a))))
-        if checker == "v1":
-            return 2 * (y - yt) * self.u[1] * (exp(-1 * l) / (1 + exp(-1 * l) * (1 + exp(-1 * l)))) * x1 * (
-                        exp(-1 * a) / (1 + exp(-1 * a) * (1 + exp(-1 * a))))
-        if checker == "b1":
-            return 2 * (y - yt) * self.u[1] * (exp(-1 * l) / (1 + exp(-1 * l) * (1 + exp(-1 * l)))) * (
-                        exp(-1 * a) / (1 + exp(-1 * a) * (1 + exp(-1 * a))))
-
-
-    def calculateGradientU(self, checker, x0, x1, yt, y, z0, z1):
-        l = z0 * self.u[0] + z1 * self.u[1] + self.b2
-        if checker == "u0":
-            return 2 * (y - yt) * self.u[0] * (exp(-1 * l) / (1 + exp(-1 * l) * (1 + exp(-1 * l))))
-        if checker == "u1":
-            return 2 * (y - yt) * self.u[1] * (exp(-1 * l) / (1 + exp(-1 * l) * (1 + exp(-1 * l))))
-        if checker == "b2":
-            return 2 * (y - yt) * (exp(-1 * l) / (1 + exp(-1 * l) * (1 + exp(-1 * l))))
+        plt.savefig(str(generation+1) + 'MLPTrain.png')
 
