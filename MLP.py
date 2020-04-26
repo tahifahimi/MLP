@@ -2,24 +2,24 @@ from math import exp
 import matplotlib.pyplot as plt
 
 class MLP:
-    def __init__(self, train, test, resultOfTest):
+    def __init__(self, train, test, resultOfTest, w0, w1, v0, v1, u0, u1, b0, b1, b2, lr, epoch):
         """
         Initialises the weights(w,u,v) and bias(b0,b1,b2) with random values between 0 and 1
         Sets the learning rate and epoch
         """
-        self.w = [0.1, 0.1]
-        self.v = [0.1, 0.1]
-        self.u = [0.1, 0.1]
-        self.b0 = 2
-        self.b1 = 2
-        self.b2 = 2
+        self.w = [w0, w1]
+        self.v = [v0, v1]
+        self.u = [u0, u1]
+        self.b0 = b0
+        self.b1 = b1
+        self.b2 = b2
 
         self.train = train
         self.test = test
         self.resultOfTest = resultOfTest
 
-        self.lr = 0.1
-        self.n_epoch = 600
+        self.lr = lr
+        self.n_epoch = epoch
 
     def calculateY(self, z0, z1):
         """ find y for each coordinate
@@ -90,12 +90,12 @@ class MLP:
             cost = 0
             resultOfModel = []
             for i in range(len(self.train)):
-                # compute y for the ith data in the train data
-                y = self.calculateY(self.train[i][0], self.train[i][1])
-                resultOfModel.append(y)
                 z0 = self.calculateZ0(self.train[i][0], self.train[i][1])
                 z1 = self.calculateZ1(self.train[i][0], self.train[i][1])
-                # compute cost for the ith data
+                # compute y for the ith data in the train data
+                y = self.calculateY(z0, z1)
+                resultOfModel.append(y)
+                # compute cost for the ith data ---> self.train[i][2] is the true value for the ith data
                 cost += self.calculateCost(self.train[i][2], y)
                 # compute the gradients of all weights
                 gradW[0] += self.calculateGradientW("w0", self.train[i][0], self.train[i][1], self.train[i][2], y, z0, z1)
@@ -112,6 +112,10 @@ class MLP:
 
             # draw each generation
             if time == self.n_epoch-1 or time == 0 or time == self.n_epoch/2:
+                print("*************")
+                print(self.w, self.b0)
+                print(self.v, self.b1)
+                print(self.u, self.b2)
                 self.draw("train", time, resultOfModel)
 
             print("gen ", time)
@@ -147,5 +151,5 @@ class MLP:
                     plt.scatter(self.test[i][0], self.test[i][1], color=colors[0])
 
         # plt.show()
-        plt.savefig(str(generation+1) + 'MLPTrain.png')
+        plt.savefig(str(generation+1) + 'MLP.png')
 

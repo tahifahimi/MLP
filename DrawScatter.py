@@ -56,11 +56,17 @@ class drawScatter:
         # f.close()
 
 
+""" first read the data file 
+    save the data file in an array (loc)
+    separate the train and test data 
+    create a single perceptron and learn that ---> find the best weights and lr and epoch
+    """
+""" create a MLP with the estimated weights and lr and epoch ( the estimation is attached to the report)
+    learn the MLP and draw it! """
 if __name__ == "__main__":
     s = drawScatter(0.9)  # pass the learning factor to the class
     s.readFile('dataset.csv')
     s.drawChart(s.loc,"main")
-
     s.seperateTrainData()
 
     # now call the Single perceptron and pass data
@@ -68,5 +74,19 @@ if __name__ == "__main__":
     # perceptron.learn()
 
     # create MLP
-    mlp = MLP(s.train, s.test, s.resultOfTest)
-    mlp.learn()
+    # mlp0 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 1, 3, 2, 0.01, 300)
+    # mlp4 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 4, 2, 1, 0.01, 300)
+    mlp7 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 4, 2, 1, 0.05, 1000)
+    mlp8 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 4, 2, 1, 0.01, 1000)
+    mlp9 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 4, 2, 1, 0.01, 1500)
+    # mlp11 = MLP(s.train, s.test, s.resultOfTest, 0.8, 0.3, 0.2, 0.7, 0.1, 0.3, 6, 5, 2, 0.01, 1500).learn()
+    # mlp11 = MLP(s.train, s.test, s.resultOfTest, -2, 2, 1, 3, 2, 2, 1, -2, -1, 0.1, 20000).learn()
+    # changes the weights with knowing of the mlp11
+    mlp11 = MLP(s.train, s.test, s.resultOfTest, -6.5, 5.1, -0.77, 5.68, 7, 3.7, 2.3, -1.7, -4.1, 0.1, 11000).learn()
+    # mlp10 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 4, 2, 1, 0.01, 2000)
+    # mlp9 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 4, 2, 1, 0.05, 1000)
+    # mlp6 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 10, 5, 3, 0.01, 300)
+    # mlp5 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 4, 2, 1, 0.1, 300)
+    # mlp3 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.6, 0.9, 0.1, 0.2, 1, 3, 2, 0.01, 300)
+    # mlp1 = MLP(s.train, s.test, s.resultOfTest, 0.1, 0.2, 0.5, 0.3, 0.9, 0.8, 1, 3, 2, 0.01, 300)
+    # mlp2 = MLP(s.train, s.test, s.resultOfTest, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1, 3, 2, 0.01, 300)
