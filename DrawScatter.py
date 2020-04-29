@@ -74,19 +74,7 @@ if __name__ == "__main__":
     perceptron.learn()
 
     # create MLP
-    # mlp0 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 1, 3, 2, 0.01, 300)
-    # mlp4 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 4, 2, 1, 0.01, 300)
-    mlp7 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 4, 2, 1, 0.05, 1000)
-    mlp8 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 4, 2, 1, 0.01, 1000)
-    mlp9 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 4, 2, 1, 0.01, 1500)
-    # mlp11 = MLP(s.train, s.test, s.resultOfTest, 0.8, 0.3, 0.2, 0.7, 0.1, 0.3, 6, 5, 2, 0.01, 1500).learn()
-    # mlp11 = MLP(s.train, s.test, s.resultOfTest, -2, 2, 1, 3, 2, 2, 1, -2, -1, 0.1, 20000).learn()
     # changes the weights with knowing of the mlp11
-    # mlp11 = MLP(s.train, s.test, s.resultOfTest, -6.5, 5.1, -0.77, 5.68, 7, 3.7, 2.3, -1.7, -4.1, 0.1, 11000).learn()
-    # mlp10 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 4, 2, 1, 0.01, 2000)
-    # mlp9 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 4, 2, 1, 0.05, 1000)
-    # mlp6 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 10, 5, 3, 0.01, 300)
-    # mlp5 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 4, 2, 1, 0.1, 300)
-    # mlp3 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.6, 0.9, 0.1, 0.2, 1, 3, 2, 0.01, 300)
-    # mlp1 = MLP(s.train, s.test, s.resultOfTest, 0.1, 0.2, 0.5, 0.3, 0.9, 0.8, 1, 3, 2, 0.01, 300)
-    # mlp2 = MLP(s.train, s.test, s.resultOfTest, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1, 3, 2, 0.01, 300)
+    mlp11 = MLP(s.train, s.test, s.resultOfTest, -6, 5, -1, 4, 6, 3, 2, -1, -4, 0.1, 23300).learn()
+    # if we are going to have overfitted neural network we run mlpOverfit
+    mlpOverfit = MLP(s.train, s.test, s.resultOfTest, -9, 6, -0.11, 8, 9, 5, 3.3, -2.8, -5.4, 0.1, 23200).learn()

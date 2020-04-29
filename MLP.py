@@ -111,15 +111,15 @@ class MLP:
                 gradB2 += self.calculateGradientU("b2", self.train[i][2], y, z0, z1)
 
             # draw each generation
-            if time == self.n_epoch-1 or time == 0 or time == self.n_epoch/2:
+            if time == self.n_epoch-1 or time == 0:
                 print("*************")
                 print(self.w, self.b0)
                 print(self.v, self.b1)
                 print(self.u, self.b2)
-                self.draw("train", time, resultOfModel)
+                self.draw("train", time, self.passAccuracy(resultOfModel), resultOfModel)
 
             print("gen ", time)
-            print(cost)
+            print("accuracy is : ",self.passAccuracy(resultOfModel))
             # assign the grads to the weights
             self.w[0] = self.w[0] - (self.lr * gradW[0]) / len(self.train)
             self.w[1] = self.w[1] - (self.lr * gradW[1]) / len(self.train)
@@ -133,7 +133,7 @@ class MLP:
             self.u[1] = self.u[1] - (self.lr * gradU[1]) / len(self.train)
             self.b2 = self.b2 - (self.lr * gradB2) / len(self.train)
 
-    def draw(self, typeOfDraw, generation, resultOfModel):
+    def draw(self, typeOfDraw, generation, accuracy, resultOfModel):
         """ draw data with considering the draw type"""
         if typeOfDraw == "train":
             colors = ["r", "b"]
@@ -151,5 +151,15 @@ class MLP:
                     plt.scatter(self.test[i][0], self.test[i][1], color=colors[0])
 
         # plt.show()
-        plt.savefig(str(generation+1) + 'MLP.png')
+        plt.savefig(str(generation+1) + 'MLP'+str(accuracy)+'.png')
 
+    def passAccuracy(self, y):
+        rightData = 0
+        for l in range(len(y)):
+            if y[l] >= 0.5:
+                if self.train[l][2] == 1:
+                    rightData += 1
+            else:
+                if self.train[l][2] == 0:
+                    rightData += 1
+        return "{:.2f}".format(float(rightData)/float(len(self.train)))
