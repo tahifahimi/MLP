@@ -13,8 +13,8 @@ class SinglePerceptron :
         self.resultOfTest = resultOfTest
 
         # initialize the  n_epoch and lr
-        self.lr = 0.05
-        self.n_epoch = 300
+        self.lr = 0.1
+        self.n_epoch = 1550
         self.bias = 1
 
     def calculateY(self, x0, x1):
@@ -61,8 +61,10 @@ class SinglePerceptron :
             bGrad *= float(-1)/log(10)
 
             # draw each generation
-            if time ==299 or time == 0:
-                self.draw("train", time, resultOfModel)
+            if time ==self.n_epoch-1 or time == 0:
+                print("the final cost is ", cost)
+                self.draw("train", time, self.passAccuracy(resultOfModel), resultOfModel)
+
 
             print("gen ", time)
             print(self.w[0], " ", self.w[1], " ", self.bias, " ", cost)
@@ -73,7 +75,7 @@ class SinglePerceptron :
 
 
 
-    def draw(self, typeOfDraw, generation, resultOfModel):
+    def draw(self, typeOfDraw, generation, accuracy, resultOfModel):
         """ draw data with considering the draw type"""
         if typeOfDraw == "train":
             colors = ["r", "b"]
@@ -91,4 +93,15 @@ class SinglePerceptron :
                     plt.scatter(self.test[i][0], self.test[i][1], color=colors[0])
 
         # plt.show()
-        plt.savefig(str(generation)+'SingleTrain.png')
+        plt.savefig(str(generation+1)+'Single'+str(accuracy)+'.png')
+
+    def passAccuracy(self, y):
+        rightData = 0
+        for l in range(len(y)):
+            if y[l] >= 0.5:
+                if self.train[l][2] == 1:
+                    rightData += 1
+            else:
+                if self.train[l][2] == 0:
+                    rightData += 1
+        return "{:.2f}".format(float(rightData)/float(len(self.train)))

@@ -64,14 +64,14 @@ class drawScatter:
 """ create a MLP with the estimated weights and lr and epoch ( the estimation is attached to the report)
     learn the MLP and draw it! """
 if __name__ == "__main__":
-    s = drawScatter(0.9)  # pass the learning factor to the class
+    s = drawScatter(0.8)  # pass the learning factor to the class
     s.readFile('dataset.csv')
     s.drawChart(s.loc,"main")
     s.seperateTrainData()
 
     # now call the Single perceptron and pass data
-    # perceptron = SinglePerceptron(s.train, s.test, s.resultOfTest)
-    # perceptron.learn()
+    perceptron = SinglePerceptron(s.train, s.test, s.resultOfTest)
+    perceptron.learn()
 
     # create MLP
     # mlp0 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 1, 3, 2, 0.01, 300)
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     # mlp11 = MLP(s.train, s.test, s.resultOfTest, 0.8, 0.3, 0.2, 0.7, 0.1, 0.3, 6, 5, 2, 0.01, 1500).learn()
     # mlp11 = MLP(s.train, s.test, s.resultOfTest, -2, 2, 1, 3, 2, 2, 1, -2, -1, 0.1, 20000).learn()
     # changes the weights with knowing of the mlp11
-    mlp11 = MLP(s.train, s.test, s.resultOfTest, -6.5, 5.1, -0.77, 5.68, 7, 3.7, 2.3, -1.7, -4.1, 0.1, 11000).learn()
+    # mlp11 = MLP(s.train, s.test, s.resultOfTest, -6.5, 5.1, -0.77, 5.68, 7, 3.7, 2.3, -1.7, -4.1, 0.1, 11000).learn()
     # mlp10 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 4, 2, 1, 0.01, 2000)
     # mlp9 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 4, 2, 1, 0.05, 1000)
     # mlp6 = MLP(s.train, s.test, s.resultOfTest, 0.9, 0.8, 0.5, 0.5, 0.1, 0.2, 10, 5, 3, 0.01, 300)
